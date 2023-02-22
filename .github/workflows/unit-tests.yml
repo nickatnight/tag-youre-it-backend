@@ -14,11 +14,12 @@ jobs:
       - name: Run unit tests
         run: |
           docker compose -f ops/docker-compose.test.yml up --detach --wait
-          docker compose -f ops/docker-compose.test.yml exec backend pytest --cov-report=xml:/data/coverage.xml --cov=src/ .
+          docker compose -f ops/docker-compose.test.yml exec backend pytest --cov-report=xml:/data/coverage.xml --cov=src/ tests/
       - name: Codecov
-        uses: codecov/codecov-action@v1
+        if: success()
+        uses: codecov/codecov-action@v3
         with:
-          file: /data/coverage.xml
+          files: /data/coverage.xml
           flags: unittests
       - name: Clean-up
         if: always()

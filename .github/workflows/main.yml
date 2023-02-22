@@ -7,6 +7,7 @@ on:
     branches:
       - main
       - develop
+
 env:
   DOCTL_VERSION: 1.92.0
 
@@ -47,6 +48,8 @@ jobs:
   #         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
   #         REGISTRY: ${{ secrets.REGISTRY }}
   #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         PASSWORD: ${{ secrets.PASSWORD }}
+  #         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   #       with:
   #         user: ubuntu
   #         host: ${{ secrets.STAGING_HOST_IP }}
@@ -67,6 +70,8 @@ jobs:
   #         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
   #         REGISTRY: ${{ secrets.REGISTRY }}
   #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         PASSWORD: ${{ secrets.PASSWORD }}
+  #         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   #       with:
   #         user: ubuntu
   #         host: ${{ secrets.PROD_HOST_IP }}
