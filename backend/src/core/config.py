@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
     LOG_LEVEL: int = Field(default=logging.INFO, env="LOG_LEVEL")
 
+    ENV: str = Field(default="dev", env="ENV")
     VERSION: str = Field(default="", env="VERSION")
     DEBUG: bool = Field(default=True, env="DEBUG")
 
