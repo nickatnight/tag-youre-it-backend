@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     POOL_SIZE: Optional[int]
     POSTGRES_URL: Optional[str]
 
+    CLIENT_ID: str = Field(default="", env="CLIENT_ID")
+    CLIENT_SECRET: str = Field(default="", env="CLIENT_SECRET")
+    USERNAME: str = Field(default="TagYoureItBot", env="USERNAME")
+    PASSWORD: str = Field(default="", env="PASSWORD")
+    BOT_NAME: str = Field(default="tag-youre-it-bot", env="BOT_NAME")
+    DEVELOPER: str = Field(default="nickatnight", env="DEVELOPER")
+    VERSION: str = Field(default="v1", env="VERSION")
+
     @validator("POOL_SIZE", pre=True)
     def build_pool(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, int):

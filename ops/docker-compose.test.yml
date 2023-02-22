@@ -2,9 +2,6 @@
 
 version: '3.7'
 
-volumes:
-  test-data:
-
 services:
   backend:
     build:
@@ -32,8 +29,6 @@ services:
       - POSTGRES_DB=test
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db-test
-    volumes:
-      - test-data:/data  # to access coverage.xml
     depends_on:
       - db-test
     expose:

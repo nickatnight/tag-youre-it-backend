@@ -12,6 +12,12 @@ x-fastapi-envs: &fastapi_envs
     - POSTGRES_PORT=5432
     - VERSION=v1
     - DEBUG=False
+    - CLIENT_ID=o6KtOpg-lDsN2aTVcihEjw
+    - CLIENT_SECRET=${CLIENT_SECRET}
+    - BOT_NAME=tag-youre-it-bot
+    - DEVELOPER=nickatnight
+    - USERNAME=TagYoureItBot
+    - PASSWORD=${PASSWORD}
 
 x-default_deploy: &default_deploy
   deploy:
@@ -47,11 +53,11 @@ services:
     image: ${REGISTRY}/nginx:${GITHUB_SHA}
     environment:
       - UPSTREAMS=/:backend:8000
-      - NGINX_SERVER_NAME=api.tagyoureitbackend.com # without this, /admin redirects to https://_/
+      - NGINX_SERVER_NAME=api.tagyoureitbot.com # without this, /admin redirects to https://_/
       - ENABLE_SSL=true
       - HTTPS_REDIRECT=true
       - CERTBOT_EMAIL=nickkelly.858@gmail.com
-      - DOMAIN_LIST=api.tagyoureitbackend.com
+      - DOMAIN_LIST=api.tagyoureitbot.com
 
     labels:
       com.tagyoureitbackend.container.name: tagyoureitbackend-nginx

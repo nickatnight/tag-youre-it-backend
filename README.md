@@ -49,7 +49,7 @@ a) A few years ago I read a [reddit blog post](https://www.redditinc.com/blog/ho
 
 b) Want keep my Python skills fresh since I've been doing a lot of full-stack development in my previous role (React/Java).
 
-c) Showcase the ecosystem of my open source projects and how they work together: [Create Release GHA](https://github.com/nickatnight/releases-action), [FastAPI Backend Base](https://github.com/nickatnight/fastapi-backend-base), [Reddit Bot Base](https://github.com/nickatnight/docker-reddit-bot-base).
+c) Showcase the ecosystem of my open source projects and how they work together: [Create Release GHA](https://github.com/nickatnight/releases-action), [FastAPI Backend Base](https://github.com/nickatnight/cookiecutter-fastapi-backend), [Reddit Bot Base](https://github.com/nickatnight/docker-reddit-bot-base).
 
 d) I'm curious to see stats of user engagement (how long did a game chain last, how many users did it contain, which subreddit plays the most, etc)
 
