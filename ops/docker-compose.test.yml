@@ -33,6 +33,8 @@ services:
       - db-test
     expose:
       - "8000"
+    volumes:
+      - /data:/data  # to access coverage.xml
 
   db-test:
     image: postgres:14.1-alpine
