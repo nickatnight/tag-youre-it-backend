@@ -1,0 +1,51 @@
+---
+
+version: '3.7'
+
+volumes:
+  test-data:
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ./Dockerfile
+      args:
+        env: "test"
+    command: |
+        bash -c "
+        while !</dev/tcp/db-test/5432; do sleep 1; done;
+        uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000"
+    environment:
+      - PYTHONUNBUFFERED=0
+      - PROJECT_NAME=test
+      - USERNAME=test
+      - PASSWORD=test
+      - CLIENT_ID=test
+      - CLIENT_SECRET=test
+      - BOT_NAME=tag-youre-it-bot
+      - VERSION=v1
+      - DEVELOPER=nickatnight
+      - ENV=test
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db-test
+    volumes:
+      - test-data:/data  # to access coverage.xml
+    depends_on:
+      - db-test
+    expose:
+      - "8000"
+
+  db-test:
+    image: postgres:14.1-alpine
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db-test

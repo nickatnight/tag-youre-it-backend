@@ -1,0 +1,77 @@
+version: '3.4'
+
+x-fastapi-envs: &fastapi_envs
+  environment:
+    - PROJECT_NAME=tag_youre_it_backend
+    - NGINX_HOST=api.tagyoureitbot.com
+    - ENV=prod
+    - POSTGRES_USER=tagyoureitbackend
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_HOST=db
+    - POSTGRES_DB=tagyoureitbackend
+    - POSTGRES_PORT=5432
+    - VERSION=v1
+    - DEBUG=False
+
+x-default_deploy: &default_deploy
+  deploy:
+    mode: replicated
+    replicas: 1
+    restart_policy:
+      condition: on-failure
+      delay: 20s
+      max_attempts: 6
+      window: 120s
+    update_config:
+      parallelism: 1
+      order: start-first
+
+volumes:
+  data-vol:
+  dbdata-vol:
+  nginxdata-vol:
+
+services:
+  db:
+    image: postgres:14.1-alpine
+    environment:
+    labels:
+      com.tagyoureitbackend.container.name: tagyoureitbackend-db
+      com.tagyoureitbackend.env: prod
+      com.tagyoureitbackend.project: tagyoureitbackend-cloud
+    volumes:
+      - dbdata-vol:/data/db
+    <<: [*fastapi_envs, *default_deploy]
+
+  nginx:
+    image: ${REGISTRY}/nginx:${GITHUB_SHA}
+    environment:
+      - UPSTREAMS=/:backend:8000
+      - NGINX_SERVER_NAME=api.tagyoureitbackend.com # without this, /admin redirects to https://_/
+      - ENABLE_SSL=true
+      - HTTPS_REDIRECT=true
+      - CERTBOT_EMAIL=nickkelly.858@gmail.com
+      - DOMAIN_LIST=api.tagyoureitbackend.com
+
+    labels:
+      com.tagyoureitbackend.container.name: tagyoureitbackend-nginx
+      com.tagyoureitbackend.env: prod
+      com.tagyoureitbackend.project: tagyoureitbackend-cloud
+    ports:
+      - '0.0.0.0:80:80'
+      - '0.0.0.0:443:443'
+    volumes:
+      - nginxdata-vol:/etc/letsencrypt
+    <<: *default_deploy
+
+  backend:
+    image: ${REGISTRY}/backend:${GITHUB_SHA}
+    environment:
+    labels:
+      com.tagyoureitbackend.container.name: tagyoureitbackend-backend
+      com.tagyoureitbackend.env: prod
+      com.tagyoureitbackend.project: tagyoureitbackend-cloud
+    <<: [*fastapi_envs, *default_deploy]
+    volumes:
+      - data-vol:/data
+    command: bash -c "uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000 --log-config=logconfig.yml"

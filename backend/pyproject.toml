@@ -1,0 +1,114 @@
+[tool.poetry]
+name = "tag-youre-it-backend"
+version = "1.0.0"
+description = "Backend for TagYoureIt Reddit bot"
+authors = ["nickatnight <nickkelly.858@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.10"
+asyncpraw = "^7.6.0"
+alembic = "^1.8.1"
+asyncpg = "^0.26.0"
+fastapi = "^0.81.0"
+psycopg2-binary = "^2.9.3"
+sqlmodel = "^0.0.8"
+emoji = "^2.1.0"
+uvicorn = "^0.18.3"
+redis = "^4.4.2"
+fastapi-cache2 = {extras = ["redis"], version = "^0.1.9"}
+PyYAML = "6.0"
+
+[tool.poetry.dev-dependencies]
+black = "22.6.0"
+isort = "5.12.0"
+mock = "^4.0.3"
+pytest = "7.2.1"
+pytest-cov = "4.0.0"
+pytest-mock = "^3.10.0"
+pytest-asyncio = "^0.19.0"
+mypy = "^0.982"
+ruff = "0.0.241"
+
+[tool.isort]
+multi_line_output = 3
+lines_after_imports = 2
+line_length = 88
+include_trailing_comma = true
+sections = 'FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER'
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+extend-exclude = '''
+(
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)
+'''
+
+[tool.ruff]
+line-length = 100
+exclude = [".git", "__pycache__", ".mypy_cache", ".pytest_cache", "migrations"]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    # "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "B904",
+    "B006",
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.codespell]
+ignore-words-list = 'selectin,'
+
+[tool.coverage.report]
+fail_under = 55
+
+[tool.coverage.run]
+omit = ['*tests/*']
+
+[tool.mypy]
+exclude = ["migrations/"]
+# --strict
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+implicit_reexport = false
+strict_equality = true
+# --strict end
+
+[[tool.mypy.overrides]]
+module = [
+    "fastapi_cache.*",
+    "redis.*"
+]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,17 @@
+---
+
+name: pull-request
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    uses: nickatnight/gha-workflows/.github/workflows/pre-commit.yml@main
+
+  unit-tests:
+    needs: [lint]
+    uses: ./.github/workflows/unit-tests.yml

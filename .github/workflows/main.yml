@@ -1,0 +1,79 @@
+name: build, test and deploy
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+      - develop
+env:
+  DOCTL_VERSION: 1.92.0
+
+jobs:
+  lint:
+    uses: nickatnight/gha-workflows/.github/workflows/pre-commit.yml@main
+
+  build:
+    needs: [lint]
+    uses: ./.github/workflows/build.yml
+
+  unit-tests:
+    needs: [build]
+    uses: ./.github/workflows/unit-tests.yml
+
+  create-release:
+    permissions:
+      contents: write
+    needs: [unit-tests]
+    uses: nickatnight/gha-workflows/.github/workflows/create-release.yml@main
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy staging
+        uses: ironhalik/docker-over-ssh-action@v6
+        if: github.ref == 'refs/heads/develop'
+        env:
+          COMPOSE_FILE: ops/docker-compose.staging.yml
+          STACK_NAME: tagyoureitbackend-staging
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        with:
+          user: ubuntu
+          host: ${{ secrets.STAGING_HOST_IP }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            mv ./doctl /usr/local/bin
+            doctl registry login
+            docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
+
+      - name: Deploy prod
+        uses: ironhalik/docker-over-ssh-action@v6
+        if: github.ref == 'refs/heads/main'
+        env:
+          COMPOSE_FILE: ops/docker-compose.prod.yml
+          STACK_NAME: tagyoureitbackend-prod
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        with:
+          user: ubuntu
+          host: ${{ secrets.PROD_HOST_IP }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            mv ./doctl /usr/local/bin
+            doctl registry login
+            docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
