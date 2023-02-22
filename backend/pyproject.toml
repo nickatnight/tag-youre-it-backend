@@ -39,44 +39,19 @@ sections = 'FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER'
 [tool.black]
 line-length = 100
 include = '\.pyi?$'
-extend-exclude = '''
-(
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-)
-'''
+extend-exclude = '(\.git|\.hg|\.mypy_cache|\.tox|\.venv|_build|migrations)'
 
 [tool.ruff]
 line-length = 100
 exclude = [".git", "__pycache__", ".mypy_cache", ".pytest_cache", "migrations"]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    # "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
-]
-ignore = [
-    "B904",
-    "B006",
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
-]
+select = ["E", "W", "F", "C", "B"]
+ignore = ["B904", "B006", "E501", "B008", "C901"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
 
 [tool.codespell]
-ignore-words-list = 'selectin,'
+ignore-words-list = ["selectin"]
 
 [tool.coverage.report]
 fail_under = 55
@@ -103,10 +78,7 @@ strict_equality = true
 # --strict end
 
 [[tool.mypy.overrides]]
-module = [
-    "fastapi_cache.*",
-    "redis.*"
-]
+module = ["fastapi_cache.*", "redis.*"]
 ignore_missing_imports = true
 
 [build-system]

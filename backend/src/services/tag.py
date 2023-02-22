@@ -53,7 +53,7 @@ class TagService:
     def it_player(self, game: Game) -> Player:
         logger.info(f"Fetching 'it' Player for Game[{game.ref_id}]")
 
-        # TODO: either prevent a player from tagging someone in a differnet sub
+        # TODO: either prevent a player from tagging someone in a different sub
         # while 'it' or add new field to determine when tagged
         players: List[Player] = [p for p in game.players if p.tag_time]
         sorted_playes: List[Player] = sorted(

@@ -44,9 +44,7 @@ class PlayerService(BaseService[PlayerRepository]):
             is_suspended=reddit_obj.is_suspended if hasattr(reddit_obj, "is_suspended") else False,
             has_verified_email=reddit_obj.has_verified_email,
         )
-        instance = await self.repo.get_or_create(
-            player_obj, **{"username": reddit_obj.name}
-        )
+        instance = await self.repo.get_or_create(player_obj, **{"username": reddit_obj.name})
 
         return instance
 

@@ -3,11 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.subreddit import ISubRedditRead
-
 from src.db.session import get_session
-from src.schemas.common import IGetResponseBase
 from src.repositories.subreddit import SubRedditRepository
+from src.schemas.common import IGetResponseBase
+from src.schemas.subreddit import ISubRedditRead
 
 
 router = APIRouter()

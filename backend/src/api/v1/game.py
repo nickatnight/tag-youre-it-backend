@@ -3,11 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.game import IGameRead
-
 from src.db.session import get_session
-from src.schemas.common import IGetResponseBase
 from src.repositories.game import GameRepository
+from src.schemas.common import IGetResponseBase
+from src.schemas.game import IGameRead
 
 
 router = APIRouter()

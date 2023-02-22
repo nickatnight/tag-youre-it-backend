@@ -1,10 +1,8 @@
 from fastapi import APIRouter, status
 from fastapi.responses import PlainTextResponse, Response
 
-from src.api.v1 import health
-from src.api.v1 import game
-from src.api.v1 import subreddit
-from src.api.v1 import player
+from src.api.v1 import game, health, player, subreddit
+
 
 home_router = APIRouter()
 

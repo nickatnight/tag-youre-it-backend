@@ -3,10 +3,10 @@ from typing import Generator
 
 import pytest
 import pytest_asyncio
-from starlette.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
+from starlette.testclient import TestClient
 
 from src.main import app
 from src.models.player import Player
