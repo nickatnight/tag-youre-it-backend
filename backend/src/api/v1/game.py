@@ -22,7 +22,7 @@ async def games(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1),
     session: AsyncSession = Depends(get_session),
-) -> IGetResponseBase[IGameRead]:
+) -> IGetResponseBase[List[IGameRead]]:
     repo = GameRepository(db=session)
     games = await repo.all(skip=skip, limit=limit)
 

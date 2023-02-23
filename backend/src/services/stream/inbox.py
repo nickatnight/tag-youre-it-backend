@@ -7,7 +7,8 @@ from asyncpraw.models import Message, Redditor
 from asyncpraw.models import Subreddit as PrawSubReddit
 
 from src.core.config import settings
-from src.core.const import TAG_TIME_HUMAN_READABLE, ReplyEnum, TagEnum
+from src.core.const import TAG_TIME_HUMAN_READABLE, ReplyEnum
+from src.core.enums import TagEnum, UserBlackList
 from src.core.utils import is_tag_time_expired
 from src.models.game import Game
 from src.models.player import Player
@@ -31,7 +32,8 @@ class InboxStreamService(AbstractStream[Message]):
         if obj.was_comment is False:
             logger.info(f"Subject of Message[{obj.subject}")
 
-            if author_name in ["ModNewsletter"]:
+            # automatically read mod new letter mail
+            if author_name in [UserBlackList.MOD_NEWS_LETTER]:
                 await obj.mark_read()
                 return False
 

@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: int = Field(default=logging.INFO, env="LOG_LEVEL")
 
     ENV: str = Field(default="dev", env="ENV")
-    VERSION: str = Field(default="", env="VERSION")
+    VERSION: str = Field(default="v1", env="VERSION")
     DEBUG: bool = Field(default=True, env="DEBUG")
 
     POSTGRES_USER: str = Field(default="", env="POSTGRES_USER")
@@ -36,7 +36,6 @@ class Settings(BaseSettings):
     PASSWORD: str = Field(default="", env="PASSWORD")
     BOT_NAME: str = Field(default="tag-youre-it-bot", env="BOT_NAME")
     DEVELOPER: str = Field(default="nickatnight", env="DEVELOPER")
-    VERSION: str = Field(default="v1", env="VERSION")
 
     @validator("POOL_SIZE", pre=True)
     def build_pool(cls, v: Optional[str], values: Dict[str, Any]) -> Any:

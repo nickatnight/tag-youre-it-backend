@@ -22,7 +22,7 @@ async def subreddits(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1),
     session: AsyncSession = Depends(get_session),
-) -> IGetResponseBase[ISubRedditRead]:
+) -> IGetResponseBase[List[ISubRedditRead]]:
     repo = SubRedditRepository(db=session)
     subreddits = await repo.all(skip=skip, limit=limit)
 
