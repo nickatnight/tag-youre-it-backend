@@ -15,10 +15,18 @@ from src.services.tag import TagService
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
+logger = logging.getLogger(__name__)
 platform_name = platform.uname()
 
 
-async def tag_run(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None:
+async def tag_init(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None:
+    """Initialize a game of Tag for a subreddit
+
+    :param subreddit_name:
+        Display name of the subreddit to enable tag for
+    :return:
+        None
+    """
     async with SessionLocal() as session:
         player_repo = PlayerRepository(db=session)
         game_repo = GameRepository(db=session)
@@ -39,8 +47,17 @@ async def tag_run(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None:
             },
         )
 
+        logger.info(f"Game of Tag has started for SubReddit[r/{subreddit_name}]")
         await e.run()
 
 
 if __name__ == "__main__":
-    asyncio.run(tag_run())
+    loop = asyncio.get_event_loop()
+    tasks = []
+
+    for sub in [SupportedSubs.TAG_YOURE_IT_BOT]:
+        task = loop.create_task(tag_init(subreddit_name=sub))
+        tasks.append(task)
+
+    loop.run_until_complete(asyncio.gather(*tasks))
+    loop.close()
