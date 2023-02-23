@@ -20,16 +20,16 @@ def pg_utcnow(element, compiler, **kw) -> str:
 
 
 class BaseModel(SQLModel):
-    id: int = Field(
-        default=None,
-        primary_key=True,
-        index=True,
-    )
     ref_id: uuid_pkg.UUID = Field(
         default_factory=uuid_pkg.uuid4,
         index=True,
         nullable=False,
         sa_column_kwargs={"server_default": text("gen_random_uuid()"), "unique": True},
+    )
+    id: Optional[int] = Field(
+        default=None,
+        primary_key=True,
+        index=True,
     )
     created_at: Optional[datetime] = Field(
         sa_column=Column(

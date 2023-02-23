@@ -2,7 +2,6 @@ import asyncio
 import logging
 import os
 import platform
-from typing import Optional
 
 from src.core.config import settings
 from src.core.engine import GameEngine
@@ -19,7 +18,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 platform_name = platform.uname()
 
 
-async def tag_run(subreddit_name: Optional[str] = SupportedSubs.TAG_YOURE_IT_BOT) -> None:
+async def tag_run(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None:
     async with SessionLocal() as session:
         player_repo = PlayerRepository(db=session)
         game_repo = GameRepository(db=session)
@@ -31,7 +30,7 @@ async def tag_run(subreddit_name: Optional[str] = SupportedSubs.TAG_YOURE_IT_BOT
                 game=GameService(repo=game_repo),
                 subreddit=SubRedditService(repo=subreddit_repo),
             ),
-            reddit_config={
+            reddit_config={  # type: ignore
                 "client_id": settings.CLIENT_ID,
                 "client_secret": settings.CLIENT_SECRET,
                 "username": settings.USERNAME,

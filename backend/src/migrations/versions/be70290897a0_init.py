@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 838ac66f0a8c
+Revision ID: be70290897a0
 Revises: 
-Create Date: 2023-02-23 02:49:02.633301
+Create Date: 2023-02-23 21:23:37.978737
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = '838ac66f0a8c'
+revision = 'be70290897a0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,8 +33,8 @@ def upgrade() -> None:
     sa.Column('is_suspended', sa.Boolean(), nullable=True),
     sa.Column('opted_out', sa.Boolean(), nullable=True),
     sa.Column('is_banned', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('ref_id', sqlmodel.sql.sqltypes.GUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
     )
@@ -53,8 +53,8 @@ def upgrade() -> None:
     sa.Column('subscribers', sa.Integer(), nullable=False),
     sa.Column('icon_img', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('is_banned', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('ref_id', sqlmodel.sql.sqltypes.GUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_subreddit_id'), 'subreddit', ['id'], unique=False)
@@ -64,8 +64,8 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('subreddit_id', sa.Integer(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('ref_id', sqlmodel.sql.sqltypes.GUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['subreddit_id'], ['subreddit.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
