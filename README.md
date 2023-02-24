@@ -6,6 +6,7 @@
         <img alt="Coverage" src="https://codecov.io/gh/nickatnight/tag-youre-it-backend/branch/main/graph/badge.svg?token=E03I4QK6D9"/>
     </a>
     <a href="https://github.com/nickatnight/tag-youre-it-backend/releases"><img alt="Release Status" src="https://img.shields.io/github/v/release/nickatnight/tag-youre-it-backend"></a>
+    <a href="https://github.com/nickatnight/tag-youre-it-backend/releases"><img alt="Python Badge" src="https://img.shields.io/badge/python-3.8%7C3.9%7C3.10%7C3.11-blue"></a>
     <a href="https://github.com/nickatnight/tag-youre-it-backend/blob/master/LICENSE">
         <img alt="License Shield" src="https://img.shields.io/github/license/nickatnight/tag-youre-it-backend">
     </a>

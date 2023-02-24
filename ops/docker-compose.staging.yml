@@ -81,5 +81,4 @@ services:
       - data-vol:/data
     command: bash -c "
       alembic upgrade head &&
-      uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000 --log-config=logconfig.yml &&
-      nohup python3 src/core/bot.py"
+      uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000 --log-config=logconfig.yml"

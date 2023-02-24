@@ -2,6 +2,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from src.core.utils import optional
+from src.models.game import GameBase
 from src.models.subreddit import SubRedditBase
 
 
@@ -11,7 +12,7 @@ class ISubRedditCreate(SubRedditBase):
 
 class ISubRedditRead(SubRedditBase):
     ref_id: UUID
-    games: Optional[List["Game"]] = []  # type: ignore # noqa
+    games: Optional[List[GameBase]]
 
 
 @optional
