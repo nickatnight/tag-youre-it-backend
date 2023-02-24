@@ -39,7 +39,7 @@ volumes:
 
 services:
   db:
-    image: postgres:14.1-alpine
+    image: postgres:15-alpine
     environment:
     labels:
       com.tagyoureitbackend.container.name: tagyoureitbackend-db

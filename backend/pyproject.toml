@@ -13,11 +13,12 @@ fastapi = "^0.92.0"
 psycopg2-binary = "^2.9.3"
 sqlmodel = "^0.0.8"
 emoji = "^2.1.0"
-uvicorn = "^0.18.3"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
 redis = "^4.5.1"
 fastapi-cache2 = {extras = ["redis"], version = "^0.1.9"}
 PyYAML = "^6.0"
 httpx = "^0.23.3"
+gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

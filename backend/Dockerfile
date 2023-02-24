@@ -8,7 +8,7 @@ RUN pip install poetry
 
 COPY ./pyproject.toml ./poetry.lock* /tmp/
 
-RUN poetry export $(test "${env:-dev}" != "prod" && echo "--with dev") \
+RUN poetry export $(test "${env}" == "test" -o "${env}" == "dev" && echo "--with dev") \
     -f requirements.txt \
     --output requirements.txt \
     --without-hashes
