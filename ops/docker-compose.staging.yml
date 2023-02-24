@@ -45,7 +45,7 @@ services:
       com.tagyoureitbackend.env: staging
       com.tagyoureitbackend.project: tagyoureitbackend-cloud
     volumes:
-      - dbdata-vol:/data/db
+      - dbdata-vol:/var/lib/postgresql/data/
     <<: [*fastapi_envs, *default_deploy]
 
   nginx:
