@@ -8,7 +8,7 @@ services:
       context: ../backend
       dockerfile: ./Dockerfile
       args:
-        env: "test"
+        env: test
     command: |
         bash -c "
         while !</dev/tcp/db-test/5432; do sleep 1; done;
