@@ -33,7 +33,7 @@ alembic-migrate:
 # lint
 test:
 	@echo "running pytest...."
-	docker compose exec backend pytest --cov-report xml --cov=src tests/
+	docker compose exec backend pytest --cov-report html --cov=src tests/
 
 lint:
 	@echo "running ruff...."

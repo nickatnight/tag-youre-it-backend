@@ -1,10 +1,14 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Column, DateTime, Field, Relationship, SQLModel
 
 from src.models.base import BaseModel
 from src.models.link import GamePlayerLink
+
+
+if TYPE_CHECKING:
+    from src.models.game import Game
 
 
 class PlayerBase(SQLModel):
@@ -44,4 +48,8 @@ class PlayerBase(SQLModel):
 
 
 class Player(BaseModel, PlayerBase, table=True):
-    games: List["Game"] = Relationship(back_populates="players", link_model=GamePlayerLink, sa_relationship_kwargs={"lazy": "selectin"})  # type: ignore # noqa
+    games: List["Game"] = Relationship(
+        back_populates="players",
+        link_model=GamePlayerLink,
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )  # noqa
