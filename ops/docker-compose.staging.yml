@@ -38,7 +38,7 @@ volumes:
 
 services:
   db:
-    image: postgres:14.1-alpine
+    image: postgres:15-alpine
     environment:
     labels:
       com.tagyoureitbackend.container.name: tagyoureitbackend-db
@@ -81,4 +81,5 @@ services:
       - data-vol:/data
     command: bash -c "
       alembic upgrade head &&
-      uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000 --log-config=logconfig.yml"
+      nohup python3 src/core/bot.py &
+      gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level=info --timeout=120"
