@@ -33,10 +33,11 @@ class InboxStreamService(AbstractStream[Message]):
             logger.info(f"Subject of Message[{obj.subject}")
 
             # automatically read mod new letter mail
-            if author_name in [UserBlackList.MOD_NEWS_LETTER]:
+            if author_name in UserBlackList.all():
                 await obj.mark_read()
                 return False
 
+            # disable PM replies when not in production
             if settings.DEBUG is True:
                 await obj.reply(ReplyEnum.feature_disabled())
                 await obj.mark_read()

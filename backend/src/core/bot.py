@@ -55,7 +55,7 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     tasks = []
 
-    for sub in [SupportedSubs.TAG_YOURE_IT_BOT]:
+    for sub in SupportedSubs.all():
         task = loop.create_task(tag_init(subreddit_name=sub))
         tasks.append(task)
 
