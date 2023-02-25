@@ -23,7 +23,7 @@ class SupportedSubs(SimpleEnum):
     """names of subreddits (case sensitive)"""
 
     TAG_YOURE_IT_BOT = "TagYoureItBot"
-    TEST = "test"
+    DOGECOIN = "dogecoin"
 
 
 class TagEnum:
