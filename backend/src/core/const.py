@@ -13,7 +13,7 @@ def _emojize(s: str) -> str:
 
 
 class Envs:
-    PROD = "prod"
+    PRODUCTION = "prod"
     STAGING = "staging"
 
 
@@ -69,7 +69,7 @@ OPT_OUT = (
 )
 
 SUB_DOMAIN = "api"
-if settings.ENV != Envs.PROD:
+if settings.ENV != Envs.PRODUCTION:
     SUB_DOMAIN = "api-staging"
 
 FOOTER = (
