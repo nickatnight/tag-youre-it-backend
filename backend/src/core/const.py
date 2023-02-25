@@ -74,7 +74,7 @@ if settings.ENV != Envs.PRODUCTION:
 
 FOOTER = (
     "^^[&nbsp;how&nbsp;to&nbsp;use]"
-    "(https://www.reddit.com/r/TagYoureItBot/comments/yi25li/tagyoureitbot_info_v22/)"
+    "(https://www.reddit.com/r/TagYoureItBot/comments/11bcwi1/tagyoureitbot_info_beta_relase/)"
     "&nbsp;|&nbsp;[creator](https://www.reddit.com/message/compose/?to=throwie_one)"
     "&nbsp;|&nbsp;[source&nbsp;code](https://github.com/nickatnight/tag-youre-it-backend)"
     "&nbsp;|&nbsp;[wikihow](https://www.wikihow.com/Play-Tag)"
