@@ -1,11 +1,14 @@
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
 from src.models.base import BaseModel
 from src.models.link import GamePlayerLink
-from src.models.player import Player
-from src.models.subreddit import SubReddit
+
+
+if TYPE_CHECKING:
+    from src.models.player import Player
+    from src.models.subreddit import SubReddit
 
 
 class GameBase(SQLModel):
@@ -16,10 +19,10 @@ class GameBase(SQLModel):
 
 
 class Game(BaseModel, GameBase, table=True):
-    subreddit: Optional[SubReddit] = Relationship(
+    subreddit: Optional["SubReddit"] = Relationship(
         back_populates="games", sa_relationship_kwargs={"lazy": "selectin"}
     )
-    players: List[Player] = Relationship(
+    players: List["Player"] = Relationship(
         back_populates="games",
         link_model=GamePlayerLink,
         sa_relationship_kwargs={"lazy": "selectin"},

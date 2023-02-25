@@ -5,21 +5,20 @@ from urllib.parse import quote_plus
 from emoji import emojize
 
 from src.core.config import settings
+from src.core.enums import TagEnum
 
 
 def _emojize(s: str) -> str:
-    return emojize(s, variant="emoji_type", language="alias")
+    return emojize(s, variant="emoji_type", language="alias")  # type: ignore
+
+
+class Envs:
+    PRODUCTION = "prod"
+    STAGING = "staging"
 
 
 TAG_TIME = 1800  # seconds
 TAG_TIME_HUMAN_READABLE: str = strftime("%M:%S", gmtime(TAG_TIME))
-
-
-class TagEnum:
-    KEY = "!tag"
-    ENABLE_PHRASE = "i want to play tag again"
-    DISABLE_PHRASE = "i dont want to play tag"
-
 
 COMMENT_REPLY_YOURE_IT = """
 :robot: Tag you're it!
@@ -69,13 +68,17 @@ OPT_OUT = (
     else ""
 )
 
+SUB_DOMAIN = "api"
+if settings.ENV != Envs.PRODUCTION:
+    SUB_DOMAIN = "api-staging"
+
 FOOTER = (
     "^^[&nbsp;how&nbsp;to&nbsp;use]"
     "(https://www.reddit.com/r/TagYoureItBot/comments/yi25li/tagyoureitbot_info_v22/)"
     "&nbsp;|&nbsp;[creator](https://www.reddit.com/message/compose/?to=throwie_one)"
-    "&nbsp;|&nbsp;[source&nbsp;code](https://github.com/nickatnight/tag-youre-it)"
+    "&nbsp;|&nbsp;[source&nbsp;code](https://github.com/nickatnight/tag-youre-it-backend)"
     "&nbsp;|&nbsp;[wikihow](https://www.wikihow.com/Play-Tag)"
-    "&nbsp;|&nbsp;[public&nbsp;api](https://api.tagyoureitbot.com/docs)"
+    f"&nbsp;|&nbsp;[public&nbsp;api](https://{SUB_DOMAIN}.tagyoureitbot.com/docs)"
     "&nbsp;|&nbsp;[website](https://tagyoureitbot.com)"
     f"{OPT_OUT}"
 )
@@ -121,10 +124,3 @@ class ReplyEnum:
     @staticmethod
     def feature_disabled() -> str:
         return ReplyEnum._e(FEATURE_DISABLED)
-
-
-class SupportedSubs:
-    """names of subreddits (case sensitive)"""
-
-    TAG_YOURE_IT_BOT = "TagYoureItBot"
-    TEST = "test"

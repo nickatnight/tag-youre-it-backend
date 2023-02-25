@@ -31,9 +31,9 @@ alembic-migrate:
 	docker compose exec backend alembic upgrade head
 
 # lint
-test:
-	@echo "running pytest...."
-	docker compose exec backend pytest --cov-report xml --cov=src tests/
+# test:
+# 	@echo "running pytest...."
+# 	docker compose exec backend pytest --cov-report xml --cov=src tests/
 
 lint:
 	@echo "running ruff...."

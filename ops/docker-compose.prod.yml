@@ -39,14 +39,14 @@ volumes:
 
 services:
   db:
-    image: postgres:14.1-alpine
+    image: postgres:15-alpine
     environment:
     labels:
       com.tagyoureitbackend.container.name: tagyoureitbackend-db
       com.tagyoureitbackend.env: prod
       com.tagyoureitbackend.project: tagyoureitbackend-cloud
     volumes:
-      - dbdata-vol:/data/db
+      - dbdata-vol:/var/lib/postgresql/data/
     <<: [*fastapi_envs, *default_deploy]
 
   nginx:
@@ -80,4 +80,7 @@ services:
     <<: [*fastapi_envs, *default_deploy]
     volumes:
       - data-vol:/data
-    command: bash -c "uvicorn src.main:app --workers 1 --host 0.0.0.0 --port 8000 --log-config=logconfig.yml"
+    command: bash -c "
+      alembic upgrade head &&
+      nohup python3 src/core/bot.py &
+      gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level=info --timeout=120"

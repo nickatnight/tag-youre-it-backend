@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tag-youre-it-backend"
-version = "1.0.0"
+version = "0.0.2"
 description = "Backend for TagYoureIt Reddit bot"
 authors = ["nickatnight <nickkelly.858@gmail.com>"]
 
@@ -9,25 +9,27 @@ python = "~3.10"
 asyncpraw = "^7.6.0"
 alembic = "^1.8.1"
 asyncpg = "^0.26.0"
-fastapi = "^0.81.0"
+fastapi = "^0.92.0"
 psycopg2-binary = "^2.9.3"
 sqlmodel = "^0.0.8"
 emoji = "^2.1.0"
-uvicorn = "^0.18.3"
-redis = "^4.4.2"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
+redis = "^4.5.1"
 fastapi-cache2 = {extras = ["redis"], version = "^0.1.9"}
-PyYAML = "6.0"
+PyYAML = "^6.0"
+httpx = "^0.23.3"
+gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
-black = "22.6.0"
-isort = "5.12.0"
+black = "^22.6.0"
+isort = "^5.12.0"
 mock = "^4.0.3"
-pytest = "7.2.1"
-pytest-cov = "4.0.0"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
 pytest-mock = "^3.10.0"
 pytest-asyncio = "^0.19.0"
 mypy = "^0.982"
-ruff = "0.0.241"
+ruff = "^0.0.241"
 
 [tool.isort]
 multi_line_output = 3
@@ -73,12 +75,12 @@ no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_return_any = true
-implicit_reexport = false
+implicit_reexport = true
 strict_equality = true
 # --strict end
 
 [[tool.mypy.overrides]]
-module = ["fastapi_cache.*", "redis.*"]
+module = ["fastapi_cache.*", "redis.*", "asyncpraw.*"]
 ignore_missing_imports = true
 
 [build-system]

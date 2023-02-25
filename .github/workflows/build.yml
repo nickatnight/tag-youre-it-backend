@@ -2,7 +2,15 @@
 
 name: build
 
-on: [workflow_call]  # allow this workflow to be called from other workflows
+on:
+  workflow_call:
+    secrets:
+      do-token:
+        description: 'Digital Ocean access token'
+        required: true
+      registry:
+        description: 'Digital Ocean Container Registry'
+        required: true
 
 jobs:
   build_backend:
@@ -14,14 +22,14 @@ jobs:
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          token: ${{ secrets.do-token }}
       - name: Build backend
         run: |
-          docker build --build-arg env=staging -t ${{ secrets.REGISTRY }}/backend:${{ github.sha }} ./backend
+          docker build --build-arg env=staging -t ${{ secrets.registry }}/backend:${{ github.sha }} ./backend
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
-        run: docker push ${{ secrets.REGISTRY }}/backend:${{ github.sha }}
+        run: docker push ${{ secrets.registry }}/backend:${{ github.sha }}
 
   build_nginx:
     runs-on: ubuntu-latest
@@ -32,11 +40,11 @@ jobs:
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          token: ${{ secrets.do-token }}
       - name: Build nginx
         run: |
-          docker build --build-arg env=staging -t ${{ secrets.REGISTRY }}/nginx:${{ github.sha }} ./nginx
+          docker build --build-arg env=staging -t ${{ secrets.registry }}/nginx:${{ github.sha }} ./nginx
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
-        run: docker push ${{ secrets.REGISTRY }}/nginx:${{ github.sha }}
+        run: docker push ${{ secrets.registry }}/nginx:${{ github.sha }}

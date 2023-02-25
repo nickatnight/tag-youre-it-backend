@@ -15,12 +15,15 @@ jobs:
   lint:
     uses: nickatnight/gha-workflows/.github/workflows/pre-commit.yml@main
 
-  # build:
-  #   needs: [lint]
-  #   uses: ./.github/workflows/build.yml
+  build:
+    needs: [lint]
+    uses: ./.github/workflows/build.yml
+    secrets:
+      do-token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      registry: ${{ secrets.REGISTRY }}
 
   unit-tests:
-    needs: [lint]
+    needs: [build]
     uses: ./.github/workflows/unit-tests.yml
 
   create-release:
@@ -31,35 +34,35 @@ jobs:
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   name: Deploy
-  #   needs: [unit-tests]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: Deploy staging
-  #       uses: ironhalik/docker-over-ssh-action@v6
-  #       if: github.ref == 'refs/heads/develop'
-  #       env:
-  #         COMPOSE_FILE: ops/docker-compose.staging.yml
-  #         STACK_NAME: tagyoureitbackend-staging
-  #         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-  #         REGISTRY: ${{ secrets.REGISTRY }}
-  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-  #         PASSWORD: ${{ secrets.PASSWORD }}
-  #         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #       with:
-  #         user: ubuntu
-  #         host: ${{ secrets.STAGING_HOST_IP }}
-  #         key: ${{ secrets.SSH_KEY }}
-  #         script: |
-  #           wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
-  #           tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
-  #           mv ./doctl /usr/local/bin
-  #           doctl registry login
-  #           docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
+      - name: Deploy staging
+        uses: ironhalik/docker-over-ssh-action@v6
+        if: github.ref == 'refs/heads/develop'
+        env:
+          COMPOSE_FILE: ops/docker-compose.staging.yml
+          STACK_NAME: tagyoureitbackend-staging
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        with:
+          user: ubuntu
+          host: ${{ secrets.STAGING_HOST_IP }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+            mv ./doctl /usr/local/bin
+            doctl registry login
+            docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
 
   #     - name: Deploy prod
   #       uses: ironhalik/docker-over-ssh-action@v6
