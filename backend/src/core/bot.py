@@ -27,6 +27,8 @@ async def tag_init(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None
     :return:
         None
     """
+    # TODO: i dont think this is the right way to do this. probably want
+    # want to create new db connection for each processed message
     async with SessionLocal() as session:
         player_repo = PlayerRepository(db=session)
         game_repo = GameRepository(db=session)
