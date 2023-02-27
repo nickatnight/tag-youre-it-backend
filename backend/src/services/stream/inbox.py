@@ -6,9 +6,10 @@ from asyncpraw import Reddit
 from asyncpraw.models import Message, Redditor
 from asyncpraw.models import Subreddit as PrawSubReddit
 
+from src.clients.reddit.inbox import InboxClient
 from src.core.config import settings
 from src.core.const import TAG_TIME_HUMAN_READABLE, ReplyEnum
-from src.core.enums import TagEnum, UserBlackList
+from src.core.enums import RestrictedReadMail, TagEnum
 from src.core.utils import is_tag_time_expired
 from src.models.game import Game
 from src.models.player import Player
@@ -21,6 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class InboxStreamService(AbstractStream[Message]):
+    def __init__(self, subreddit_name: str, client: Optional[InboxClient] = None) -> None:
+        self.subreddit_name = subreddit_name
+        self.client = client or InboxClient()
+
     async def pre_flight_check(self, tag_service: TagService, obj: Message) -> bool:
         author = obj.author
         await author.load()  # Re-fetches the object
@@ -30,11 +35,11 @@ class InboxStreamService(AbstractStream[Message]):
 
         # direct messages which may involve user engagement take precedence
         if obj.was_comment is False:
-            logger.info(f"Subject of Message[{obj.subject}")
+            logger.info(f"Subject of Message[{obj.subject}]")
 
-            # automatically read mod new letter mail
-            if author_name in UserBlackList.all():
-                await obj.mark_read()
+            # skip mail from blacklist users
+            if author_name in RestrictedReadMail.all():
+                logger.info(f"NEW MAIL from: [{author_name}]...skipping")
                 return False
 
             # disable PM replies when not in production
