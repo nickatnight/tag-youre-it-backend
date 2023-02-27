@@ -9,13 +9,15 @@ from asyncpraw.models.base import AsyncPRAWBase
 ModelType = TypeVar("ModelType")
 SchemaType = TypeVar("SchemaType")
 PrawType = TypeVar("PrawType", bound=AsyncPRAWBase)
+ClientType = TypeVar("ClientType")
 
 
 class AbstractStream(Generic[PrawType], metaclass=ABCMeta):
     """interface to stream Reddit Comments, Messaging, etc from a particular Subreddit"""
 
-    def __init__(self, subreddit_name: str) -> None:
-        self.subreddit_name: str = subreddit_name
+    def __init__(self, subreddit_name: str, client: Optional[ClientType] = None) -> None:
+        self.subreddit_name = subreddit_name
+        self.client = client
 
     @abstractmethod
     async def pre_flight_check(self, tag_service: Any, obj: PrawType) -> bool:

@@ -5,7 +5,7 @@ import platform
 
 from src.core.config import settings
 from src.core.engine import GameEngine
-from src.core.enums import SupportedSubs
+from src.core.enums import SupportedSubs, UserBlacklist
 from src.db.session import SessionLocal
 from src.repositories import GameRepository, PlayerRepository, SubRedditRepository
 from src.services import GameService, PlayerService, SubRedditService
@@ -40,13 +40,6 @@ async def tag_init(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None
                 game=GameService(repo=game_repo),
                 subreddit=SubRedditService(repo=subreddit_repo),
             ),
-            reddit_config={  # type: ignore
-                "client_id": settings.CLIENT_ID,
-                "client_secret": settings.CLIENT_SECRET,
-                "username": settings.USERNAME,
-                "password": settings.PASSWORD,
-                "user_agent": f"{platform_name}/{settings.VERSION} ({settings.BOT_NAME} {settings.DEVELOPER});",
-            },
         )
 
         logger.info(f"Game of Tag has started for SubReddit[r/{subreddit_name}]")
@@ -56,8 +49,13 @@ async def tag_init(subreddit_name: str = SupportedSubs.TAG_YOURE_IT_BOT) -> None
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     tasks = []
+    supported_subs = (
+        SupportedSubs.all()
+        if settings.USERNAME == UserBlacklist.TAG_YOURE_IT_BOT
+        else SupportedSubs.test()
+    )
 
-    for sub in SupportedSubs.all():
+    for sub in supported_subs:
         task = loop.create_task(tag_init(subreddit_name=sub))
         tasks.append(task)
 
