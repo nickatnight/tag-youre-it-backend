@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     ENV: str = Field(default="dev", env="ENV")
     VERSION: str = Field(default="v1", env="VERSION")
     DEBUG: bool = Field(default=True, env="DEBUG")
+    USE_SENTRY: bool = Field(default=False, env="USE_SENTRY")
 
     POSTGRES_USER: str = Field(default="", env="POSTGRES_USER")
     POSTGRES_PASSWORD: str = Field(default="", env="POSTGRES_PASSWORD")

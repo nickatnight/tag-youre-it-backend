@@ -13,6 +13,17 @@ from src.db.session import add_postgresql_extension
 
 logger = logging.getLogger(__name__)
 
+if settings.USE_SENTRY is True:
+    import sentry_sdk
+
+    logger.info("Initializing Sentry...")
+    sentry_sdk.init(
+        dsn="https://f206851df3fd40ecabdf48f812cde72d@o4504749978681344.ingest.sentry.io/4504749981368320",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+    )
 
 tags_metadata = [
     {
