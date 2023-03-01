@@ -51,6 +51,7 @@ jobs:
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           REGISTRY: ${{ secrets.REGISTRY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_STAGING_HOST: ${{ secrets.POSTGRES_STAGING_HOST }}
           PASSWORD: ${{ secrets.PASSWORD }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         with:
