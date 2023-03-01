@@ -34,7 +34,6 @@ x-default_deploy: &default_deploy
 
 volumes:
   data-vol:
-  dbdata-vol:
   nginxdata-vol:
 
 services:
