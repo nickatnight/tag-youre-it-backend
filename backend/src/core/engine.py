@@ -3,7 +3,6 @@ from typing import Optional, Union
 from uuid import UUID
 
 from src.core.config import settings
-from src.services.stream.comment import CommentStreamService
 from src.services.stream.inbox import InboxStreamService
 from src.services.tag import TagService
 
@@ -25,7 +24,7 @@ class GameEngine:
     def __init__(
         self,
         tag_service: TagService,
-        stream_service: Union[InboxStreamService, CommentStreamService],
+        stream_service: InboxStreamService,
     ):
         self.tag_service = tag_service
         self.stream_service = stream_service
@@ -40,7 +39,6 @@ class GameEngine:
         # TODO: move to decorator?
         try:
             async for mention in self.stream_service.client.stream():
-                # pass
                 pre_flight_check: bool = await self.stream_service.pre_flight_check(
                     tag_service, mention
                 )

@@ -1,11 +1,11 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
 
 T = TypeVar("T")
 
 
-class IClient(Generic[T], metaclass=ABCMeta):
+class IClient(Generic[T], ABC):
     @classmethod
     @abstractmethod
     def configure(cls) -> T:

@@ -1,8 +1,8 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any, List, Optional
 
 
-class IRepository(metaclass=ABCMeta):
+class IRepository(ABC):
     """Class representing the repository interface."""
 
     @abstractmethod

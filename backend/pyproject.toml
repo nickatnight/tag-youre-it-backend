@@ -81,7 +81,7 @@ strict_equality = true
 # --strict end
 
 [[tool.mypy.overrides]]
-module = ["fastapi_cache.*", "redis.*", "asyncpraw.*"]
+module = ["fastapi_cache.*", "redis.*", "asyncpraw.*", "asyncprawcore.*"]
 ignore_missing_imports = true
 
 [build-system]

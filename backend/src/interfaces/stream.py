@@ -1,8 +1,7 @@
-from abc import ABCMeta, abstractmethod
-from typing import Any, AsyncIterator, Generic, Optional, TypeVar, Union
+from abc import ABC, abstractmethod
+from typing import Any, Generic, Optional, TypeVar, Union
 from uuid import UUID
 
-import asyncpraw
 from asyncpraw.models.base import AsyncPRAWBase
 
 
@@ -12,12 +11,8 @@ PrawType = TypeVar("PrawType", bound=AsyncPRAWBase)
 ClientType = TypeVar("ClientType")
 
 
-class AbstractStream(Generic[PrawType], metaclass=ABCMeta):
+class IStream(Generic[PrawType], ABC):
     """interface to stream Reddit Comments, Messaging, etc from a particular Subreddit"""
-
-    def __init__(self, subreddit_name: str, client: Optional[ClientType] = None) -> None:
-        self.subreddit_name = subreddit_name
-        self.client = client
 
     @abstractmethod
     async def pre_flight_check(self, tag_service: Any, obj: PrawType) -> bool:
@@ -41,14 +36,5 @@ class AbstractStream(Generic[PrawType], metaclass=ABCMeta):
         :param obj:                 AsyncPRAW Reddit object
         :param game_id:             Id of the Game database object
         :return:                    New game id TODO: come back to this logic
-        """
-        ...
-
-    @abstractmethod
-    def stream(self, reddit: asyncpraw.Reddit) -> AsyncIterator[PrawType]:
-        """stream incoming Reddit objects
-
-        :param reddit:              Main Reddit wrapper object
-        :return:                    Reddit object generator
         """
         ...
