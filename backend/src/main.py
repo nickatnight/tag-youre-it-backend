@@ -60,7 +60,7 @@ async def on_startup() -> None:
     logger.info("FastAPI app running...")
 
 
-app.add_middleware(CORSMiddleware, allow_origins=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["*"], expose_headers=["x-content-range"])
 
 app.add_event_handler("startup", on_startup)
 
