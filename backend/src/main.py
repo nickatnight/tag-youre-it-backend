@@ -45,8 +45,7 @@ tags_metadata = [
 ]
 
 origins = [
-    "https://api.tagyoureitbot.com",
-    "https://api-staging.tagyoureitbot.com",
+    "https://tagyoureitbot.com",
     "http://localhost",
     "http://localhost:3000",
 ]
