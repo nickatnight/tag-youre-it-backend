@@ -3,11 +3,14 @@ from typing import Generator
 
 import pytest
 import pytest_asyncio
+from asyncpraw import Reddit
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from starlette.testclient import TestClient
 
+from src.clients.reddit.inbox import InboxClient
 from src.main import app
 from src.models.player import Player
 from src.models.subreddit import SubReddit
@@ -30,6 +33,12 @@ FAKE_SETTINGS = {
 def test_app():
     client = TestClient(app)
     yield client  # testing happens here
+
+
+@pytest_asyncio.fixture(scope="module")
+async def async_test_app():
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
 
 
 @pytest.fixture(scope="session")
@@ -112,3 +121,21 @@ def subreddit() -> SubReddit:
         subscribers=test_subreddit["subscribers"],
         icon_img=test_subreddit["icon_img"],
     )
+
+
+@pytest.fixture
+async def reddit():
+    """Mock Reddit instance"""
+    async with Reddit(client_id="dummy", client_secret="dummy", user_agent="dummy") as reddit:
+        # Unit tests should never issue requests
+        reddit._core.request = dummy_request
+        yield reddit
+
+
+async def dummy_request(*args, **kwargs):
+    pass
+
+
+@pytest.fixture
+def mock_inbox_client(reddit):
+    return InboxClient(reddit=reddit)

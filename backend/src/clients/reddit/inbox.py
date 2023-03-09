@@ -6,8 +6,8 @@ from src.clients.reddit.base import RedditResource
 
 
 class InboxClient(RedditResource):
-    def __init__(self) -> None:
-        self.reddit = self.configure()
+    def __init__(self, reddit=None) -> None:
+        self.reddit = reddit or self.configure()
 
     def stream(self) -> AsyncIterator[Message]:
         """stream incoming messages"""
@@ -17,4 +17,4 @@ class InboxClient(RedditResource):
 
     async def close(self) -> None:
         """Close requester"""
-        _ = await self.reddit.close()
+        await self.reddit.close()

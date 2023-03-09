@@ -1,7 +1,7 @@
 from asyncpraw.models import Comment
 
-from src.services.stream.base import AbstractStream
+from src.interfaces.stream import IStream
 
 
-class CommentStreamService(AbstractStream[Comment]):
+class CommentStreamService(IStream[Comment]):
     pass

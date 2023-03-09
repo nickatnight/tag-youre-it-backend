@@ -15,9 +15,13 @@ class SimpleEnum:
         return [value for name, value in vars(cls).items() if name.isupper()]
 
 
-class SortOrder:
+class OrderEnum:
     ASC = "asc"
     DESC = "desc"
+
+
+class SortEnum:
+    CREATED_AT = "created_at"
 
 
 class SupportedSubs(SimpleEnum):

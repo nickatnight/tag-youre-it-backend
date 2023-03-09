@@ -1,8 +1,8 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any, List, Optional
 
 
-class IRepository(metaclass=ABCMeta):
+class IRepository(ABC):
     """Class representing the repository interface."""
 
     @abstractmethod
@@ -29,7 +29,7 @@ class IRepository(metaclass=ABCMeta):
     async def all(
         self,
         skip: int = 0,
-        limit: int = 50,
+        limit: int = 100,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
     ) -> List[Any]:

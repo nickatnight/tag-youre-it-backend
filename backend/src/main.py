@@ -44,6 +44,13 @@ tags_metadata = [
     },
 ]
 
+origins = [
+    "https://api.tagyoureitbot.com",
+    "https://api-staging.tagyoureitbot.com",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
 app = FastAPI(
     title="tag-youre-it-backend",
     description="Backend for TagYoureIt Reddit bot",
@@ -60,7 +67,7 @@ async def on_startup() -> None:
     logger.info("FastAPI app running...")
 
 
-app.add_middleware(CORSMiddleware, allow_origins=["*"], expose_headers=["x-content-range"])
+app.add_middleware(CORSMiddleware, allow_origins=origins, expose_headers=["x-content-range"])
 
 app.add_event_handler("startup", on_startup)
 
