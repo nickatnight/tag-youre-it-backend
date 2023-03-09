@@ -4,6 +4,7 @@ from typing import Any, Generic, List, Optional, Type, TypeVar
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel, select
 
+from src.core.enums import OrderEnum, SortEnum
 from src.interfaces.repository import IRepository
 
 
@@ -88,10 +89,10 @@ class BaseSQLAlchemyRepository(IRepository, Generic[ModelType, CreateSchemaType,
         columns = self._model.__table__.columns  # type: ignore
 
         if not sort_field:
-            sort_field = "created_utc"
+            sort_field = SortEnum.CREATED_AT
 
         if not sort_order:
-            sort_order = "desc"
+            sort_order = OrderEnum.DESC
 
         order_by = getattr(columns[sort_field], sort_order)()
         query = select(self._model).offset(skip).limit(limit).order_by(order_by)
