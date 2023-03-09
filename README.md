@@ -58,7 +58,7 @@ See [r/TagYoureItBot](https://www.reddit.com/r/TagYoureItBot) for more updates.
 ## Architecture
 <p align="center">
     <a href="#">
-        <img alt="Architecture Workflow" src="https://i.imgur.com/8TEpVZk.png">
+        <img alt="Architecture Workflow" src="https://i.imgur.com/YJjmgva.png">
     </a>
 </p>
 
