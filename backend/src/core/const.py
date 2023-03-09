@@ -68,9 +68,6 @@ OPT_OUT = (
     else ""
 )
 
-SUB_DOMAIN = "api"
-if settings.ENV != Envs.PRODUCTION:
-    SUB_DOMAIN = "api-staging"
 
 FOOTER = (
     "^^[&nbsp;how&nbsp;to&nbsp;use]"
@@ -78,7 +75,7 @@ FOOTER = (
     "&nbsp;|&nbsp;[creator](https://www.reddit.com/message/compose/?to=throwie_one)"
     "&nbsp;|&nbsp;[source&nbsp;code](https://github.com/nickatnight/tag-youre-it-backend)"
     "&nbsp;|&nbsp;[wikihow](https://www.wikihow.com/Play-Tag)"
-    f"&nbsp;|&nbsp;[public&nbsp;api](https://{SUB_DOMAIN}.tagyoureitbot.com/docs)"
+    f"&nbsp;|&nbsp;[public&nbsp;api](https://api.tagyoureitbot.com/docs)"
     "&nbsp;|&nbsp;[website](https://tagyoureitbot.com)"
     f"{OPT_OUT}"
 )
