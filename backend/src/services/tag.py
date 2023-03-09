@@ -38,36 +38,33 @@ class TagService:
 
         _ = await self.game.repo.update(db_obj, game_obj)
 
-        player_obj = IPlayerUpdate(tag_time=None)
+        player_obj = IPlayerUpdate(is_it=False)
         await self.player.repo.update(tagger, player_obj)
 
     async def current_game(self, subreddit: SubReddit) -> Optional[Game]:
-        active_games: List[Game] = await self.game.active()
+        game: Optional[Game] = await self.game.active(sub=subreddit)
 
-        for game in active_games:
-            if game.subreddit_id == subreddit.id:
-                return game
-
-        return None
+        return game
 
     def it_player(self, game: Game) -> Player:
         logger.info(f"Fetching 'it' Player for Game[{game.ref_id}]")
 
         # TODO: either prevent a player from tagging someone in a different sub
         # while 'it' or add new field to determine when tagged
-        players: List[Player] = [p for p in game.players if p.tag_time]
-        sorted_playes: List[Player] = sorted(
-            players, key=lambda p: p.tag_time, reverse=True  # type: ignore
-        )
+        # players: List[Player] = [p for p in game.players if p.is_it]
+        # sorted_playes: List[Player] = sorted(
+        #     players, key=lambda p: p.tag_time, reverse=True  # type: ignore
+        # )
 
-        if not sorted_playes:
-            raise ObjectNotFound(f"Could not find 'it' Player for Game[{game.ref_id}]")
+        for p in game.players:
+            if p.is_it:
+                return p
 
-        return sorted_playes[0]
+        raise ObjectNotFound(f"Could not find 'it' Player for Game[{game.ref_id}]")
 
     async def add_player_to_game(self, game_ref_id: Union[UUID, str], tagee: Player) -> None:
         game_ref_ids: List[str] = [str(g.ref_id) for g in tagee.games]
-        tagge_obj = IPlayerUpdate(tag_time=datetime.now(timezone.utc))
+        tagge_obj = IPlayerUpdate(tag_time=datetime.now(timezone.utc), is_it=True)
 
         await self.player.repo.update(tagee, tagge_obj)
 
@@ -86,6 +83,7 @@ class TagService:
         return p
 
     async def player_tag(self, reddit_obj: Redditor) -> None:
+        logger.info(f"Tagging Player[{reddit_obj.name}]")
         await self.player.tag(reddit_obj)
 
     async def player_untag(self, reddit_obj: Redditor) -> None:
@@ -93,6 +91,7 @@ class TagService:
 
         they could have been the last person tagged in a previous game
         """
+        logger.info(f"Untagging Player[{reddit_obj.name}]")
         await self.player.untag(reddit_obj)
 
     async def player_list_opted_out(self) -> List[str]:

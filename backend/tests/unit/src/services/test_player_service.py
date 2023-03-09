@@ -44,6 +44,7 @@ async def test_tag(async_session: AsyncSession, player_repo: IRepository, player
     await async_session.refresh(player)
 
     assert player.tag_time is None
+    assert player.is_it is False
 
     service = PlayerService(repo=player_repo)
     mock_redditor = Mock()
@@ -52,18 +53,21 @@ async def test_tag(async_session: AsyncSession, player_repo: IRepository, player
     await service.tag(mock_redditor)
 
     assert player.tag_time is not None
+    assert player.is_it is True
 
 
 @pytest.mark.asyncio
 async def test_untag(async_session: AsyncSession, player_repo: IRepository, player: Player):
     tag_time = datetime.now(timezone.utc)
     player.tag_time = tag_time
+    player.is_it = True
 
     async_session.add(player)
     await async_session.commit()
     await async_session.refresh(player)
 
     assert player.tag_time == tag_time
+    assert player.is_it is True
 
     service = PlayerService(repo=player_repo)
     mock_redditor = Mock()
@@ -71,7 +75,7 @@ async def test_untag(async_session: AsyncSession, player_repo: IRepository, play
 
     await service.untag(mock_redditor)
 
-    assert player.tag_time is None
+    assert player.is_it is False
 
 
 @pytest.mark.asyncio
