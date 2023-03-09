@@ -29,7 +29,7 @@ class IRepository(ABC):
     async def all(
         self,
         skip: int = 0,
-        limit: int = 50,
+        limit: int = 100,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
     ) -> List[Any]:

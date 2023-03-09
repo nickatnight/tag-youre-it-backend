@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -12,6 +13,7 @@ class IGameCreate(GameBase):
 
 
 class IGameRead(GameBase):
+    created_at: datetime
     ref_id: UUID
     subreddit: Optional[SubReddit] = None
     players: Optional[List[Player]] = []

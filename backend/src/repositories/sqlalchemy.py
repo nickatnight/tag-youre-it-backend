@@ -88,7 +88,7 @@ class BaseSQLAlchemyRepository(IRepository, Generic[ModelType, CreateSchemaType,
         columns = self._model.__table__.columns  # type: ignore
 
         if not sort_field:
-            sort_field = "created_at"
+            sort_field = "created_utc"
 
         if not sort_order:
             sort_order = "desc"

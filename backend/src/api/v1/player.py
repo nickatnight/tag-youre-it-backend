@@ -22,12 +22,12 @@ async def players(
     response: Response,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1),
-    sort: str = Query(default="created_utc"),
+    sort: str = Query(default="created_at"),
     order: str = Query(default="desc"),
     session: AsyncSession = Depends(get_session),
 ) -> IGetResponseBase[List[IPlayerRead]]:
     repo = PlayerRepository(db=session)
-    players = await repo.all(skip=skip, limit=limit)
+    players = await repo.all(skip=skip, limit=limit, sort_field=sort, sort_order=order.lower())
 
     response.headers["x-content-range"] = f"{len(players)}/{10}"
     return IGetResponseBase[List[IPlayerRead]](data=players)

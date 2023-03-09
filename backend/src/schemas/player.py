@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -11,6 +12,7 @@ class IPlayerCreate(PlayerBase):
 
 
 class IPlayerRead(PlayerBase):
+    created_at: datetime
     ref_id: UUID
     games: Optional[List[Game]] = []
 
