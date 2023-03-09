@@ -12,7 +12,7 @@ services:
     command: |
         bash -c "
         while !</dev/tcp/db-test/5432; do sleep 1; done;
-        pytest --cov-report=xml:/data/coverage.xml --cov=src/ .""
+        pytest --cov-report=xml:/data/coverage.xml --cov=src/ ."
     environment:
       - PYTHONUNBUFFERED=0
       - PROJECT_NAME=test
