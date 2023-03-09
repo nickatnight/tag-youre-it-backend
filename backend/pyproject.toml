@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tag-youre-it-backend"
-version = "0.0.2"
+version = "0.1.0"
 description = "Backend for TagYoureIt Reddit bot"
 authors = ["nickatnight <nickkelly.858@gmail.com>"]
 
@@ -19,6 +19,7 @@ fastapi-cache2 = {extras = ["redis"], version = "^0.1.9"}
 PyYAML = "^6.0"
 httpx = "^0.23.3"
 gunicorn = "^20.1.0"
+sentry-sdk = "^1.15.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
@@ -30,6 +31,7 @@ pytest-mock = "^3.10.0"
 pytest-asyncio = "^0.19.0"
 mypy = "^0.982"
 ruff = "^0.0.241"
+httpx = "^0.23.3"
 
 [tool.isort]
 multi_line_output = 3
@@ -80,7 +82,7 @@ strict_equality = true
 # --strict end
 
 [[tool.mypy.overrides]]
-module = ["fastapi_cache.*", "redis.*", "asyncpraw.*"]
+module = ["fastapi_cache.*", "redis.*", "asyncpraw.*", "asyncprawcore.*"]
 ignore_missing_imports = true
 
 [build-system]

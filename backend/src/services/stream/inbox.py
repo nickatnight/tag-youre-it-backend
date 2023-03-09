@@ -1,26 +1,30 @@
 import logging
-from typing import AsyncIterator, Optional, Union
+from typing import Optional, Union
 from uuid import UUID
 
-from asyncpraw import Reddit
 from asyncpraw.models import Message, Redditor
 from asyncpraw.models import Subreddit as PrawSubReddit
 
+from src.clients.reddit.inbox import InboxClient
 from src.core.config import settings
 from src.core.const import TAG_TIME_HUMAN_READABLE, ReplyEnum
-from src.core.enums import TagEnum, UserBlackList
+from src.core.enums import RestrictedReadMail, TagEnum
 from src.core.utils import is_tag_time_expired
+from src.interfaces.stream import IStream
 from src.models.game import Game
 from src.models.player import Player
 from src.models.subreddit import SubReddit
-from src.services.stream.base import AbstractStream
 from src.services.tag import TagService
 
 
 logger = logging.getLogger(__name__)
 
 
-class InboxStreamService(AbstractStream[Message]):
+class InboxStreamService(IStream[Message]):
+    def __init__(self, subreddit_name: str, client: Optional[InboxClient] = None) -> None:
+        self.subreddit_name = subreddit_name
+        self.client = client or InboxClient()
+
     async def pre_flight_check(self, tag_service: TagService, obj: Message) -> bool:
         author = obj.author
         await author.load()  # Re-fetches the object
@@ -30,13 +34,14 @@ class InboxStreamService(AbstractStream[Message]):
 
         # direct messages which may involve user engagement take precedence
         if obj.was_comment is False:
-            logger.info(f"Subject of Message[{obj.subject}")
+            logger.info(f"Subject of Message[{obj.subject}]")
 
-            # automatically read mod new letter mail
-            if author_name in [UserBlackList.MOD_NEWS_LETTER]:
-                await obj.mark_read()
+            # skip mail from blacklist users
+            if author_name in RestrictedReadMail.all():
+                logger.info(f"NEW MAIL from: [{author_name}]...skipping")
                 return False
 
+            # disable PM replies when not in production
             if settings.DEBUG is True:
                 await obj.reply(ReplyEnum.feature_disabled())
                 await obj.mark_read()
@@ -158,8 +163,3 @@ class InboxStreamService(AbstractStream[Message]):
             return game.ref_id
 
         return game_id
-
-    def stream(self, reddit: Reddit) -> AsyncIterator[Message]:
-        s: AsyncIterator[Message] = reddit.inbox.stream()
-
-        return s

@@ -5,11 +5,11 @@ x-fastapi-envs: &fastapi_envs
     - PROJECT_NAME=tag_youre_it_backend
     - NGINX_HOST=api-staging.tagyoureitbot.com
     - ENV=staging
-    - POSTGRES_USER=tagyoureitbackend
+    - POSTGRES_USER=tagyoureitbot
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    - POSTGRES_HOST=db
-    - POSTGRES_DB=tagyoureitbackend
-    - POSTGRES_PORT=5432
+    - POSTGRES_HOST=${POSTGRES_STAGING_HOST}
+    - POSTGRES_DB=tagyoureitbot
+    - POSTGRES_PORT=25060
     - VERSION=v1
     - CLIENT_ID=o6KtOpg-lDsN2aTVcihEjw
     - CLIENT_SECRET=${CLIENT_SECRET}
@@ -17,6 +17,7 @@ x-fastapi-envs: &fastapi_envs
     - DEVELOPER=nickatnight
     - USERNAME=TagYoureItBot
     - PASSWORD=${PASSWORD}
+    - USE_SENTRY=True
 
 x-default_deploy: &default_deploy
   deploy:
@@ -33,21 +34,9 @@ x-default_deploy: &default_deploy
 
 volumes:
   data-vol:
-  dbdata-vol:
   nginxdata-vol:
 
 services:
-  db:
-    image: postgres:15-alpine
-    environment:
-    labels:
-      com.tagyoureitbackend.container.name: tagyoureitbackend-db
-      com.tagyoureitbackend.env: staging
-      com.tagyoureitbackend.project: tagyoureitbackend-cloud
-    volumes:
-      - dbdata-vol:/var/lib/postgresql/data/
-    <<: [*fastapi_envs, *default_deploy]
-
   nginx:
     image: ${REGISTRY}/nginx:${GITHUB_SHA}
     environment:
@@ -81,5 +70,4 @@ services:
       - data-vol:/data
     command: bash -c "
       alembic upgrade head &&
-      nohup python3 src/core/bot.py &
       gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level=info --timeout=120"

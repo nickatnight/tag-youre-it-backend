@@ -82,5 +82,4 @@ services:
       - data-vol:/data
     command: bash -c "
       alembic upgrade head &&
-      nohup python3 src/core/bot.py &
       gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level=info --timeout=120"
