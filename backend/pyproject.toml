@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tag-youre-it-backend"
-version = "0.0.2"
+version = "0.1.0"
 description = "Backend for TagYoureIt Reddit bot"
 authors = ["nickatnight <nickkelly.858@gmail.com>"]
 
