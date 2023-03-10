@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Union
+from typing import Optional, Union
 from uuid import UUID
 
 from sqlmodel import select
@@ -41,14 +41,18 @@ class GameService(BaseService[GameRepository]):
 
         logger.info(f"Adding Players[{player.username}] to Game[{game.ref_id}]")
 
-    async def active(self) -> List[Game]:
+    async def active(self, sub: SubReddit) -> Optional[Game]:
         logger.info("Fetching current game")
         statement = (
             select(self.repo._model)
             .where(self.repo._model.is_active == True)  # noqa
+            .where(self.repo._model.subreddit_id == sub.id)
             .order_by(self.repo._model.__table__.columns["created_at"].desc())  # type: ignore
         )
         results = await self.repo.db.execute(statement)
-        games: List[Game] = results.scalars().all()
+        game: Optional[Game] = results.scalar_one_or_none()
 
-        return games
+        if not game:
+            logger.info(f"No Game found for sub[{sub.ref_id}]")
+
+        return game

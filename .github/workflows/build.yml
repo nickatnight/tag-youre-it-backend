@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.do-token }}
       - name: Build backend
         run: |
-          docker build --build-arg env=staging -t ${{ secrets.registry }}/backend:${{ github.sha }} ./backend
+          docker build --build-arg env=prod -t ${{ secrets.registry }}/backend:${{ github.sha }} ./backend
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
@@ -43,7 +43,7 @@ jobs:
           token: ${{ secrets.do-token }}
       - name: Build nginx
         run: |
-          docker build --build-arg env=staging -t ${{ secrets.registry }}/nginx:${{ github.sha }} ./nginx
+          docker build --build-arg env=prod -t ${{ secrets.registry }}/nginx:${{ github.sha }} ./nginx
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry

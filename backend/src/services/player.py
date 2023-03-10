@@ -28,7 +28,7 @@ class PlayerService(BaseService[PlayerRepository]):
         if not player:
             raise ObjectNotFound
 
-        player_obj = IPlayerUpdate(opted_out=value)
+        player_obj = IPlayerUpdate(opted_out=value, is_it=False)
         _ = await self.repo.update(player, player_obj)
 
         logger.info(f"[{player.username}] opted out of playing.")
@@ -51,11 +51,11 @@ class PlayerService(BaseService[PlayerRepository]):
     async def untag(self, reddit_obj: Redditor) -> None:
         instance = await self.get_or_create(reddit_obj)
 
-        player_obj = IPlayerUpdate(tag_time=None)
+        player_obj = IPlayerUpdate(is_it=False)
         _ = await self.repo.update(instance, player_obj)
 
     async def tag(self, reddit_obj: Redditor) -> None:
         instance = await self.get_or_create(reddit_obj)
 
-        player_obj = IPlayerUpdate(tag_time=datetime.now(timezone.utc))
+        player_obj = IPlayerUpdate(tag_time=datetime.now(timezone.utc), is_it=True)
         _ = await self.repo.update(instance, player_obj)

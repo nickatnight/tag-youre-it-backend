@@ -1,26 +1,24 @@
-# import logging
-# from typing import Any, Callable
+import functools
+import logging
+from typing import Any
 
-# import asyncprawcore
-# from result import Result, Ok, Err
-
-
-# logger = logging.getLogger(__name__)
+import asyncprawcore
 
 
-# class CatchAsyncPraw:
-#     """generic catch handler for methods using asyncpraw"""
-#     def __init__(self, function: Callable[..., Any]) -> None:
-#         self.function = function
+logger = logging.getLogger(__name__)
 
-#     def __call__(self, *args: str, **kwargs: Any) -> Result[Any, str]:
-#         try:
-#             result: Any = self.function(*args, **kwargs)
-#         except asyncprawcore.exceptions.RequestException as a_exc:
-#             logger.error(a_exc, exc_info=True)
-#             return Err(str(a_exc))
-#         except Exception as e:
-#             logger.error(e, exc_info=True)
-#             return Err(f"Unknown error occurred: {e}")
-#         else:
-#             return Ok(result)
+
+def catch_apraw_and_log(func):
+    @functools.wraps(func)
+    async def wrapper_catch_apraw_and_log(*args, **kwargs):
+        try:
+            result: Any = await func(*args, **kwargs)
+        except asyncprawcore.exceptions.RequestException as a_exc:
+            logger.warning(a_exc, exc_info=True)
+        except Exception as e:
+            logger.warning(e, exc_info=True)
+        else:
+            return result
+        return False
+
+    return wrapper_catch_apraw_and_log

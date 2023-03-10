@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 001ed18e8a99
+Revision ID: dcf44004a9e6
 Revises: 
-Create Date: 2023-02-24 02:29:14.014323
+Create Date: 2023-03-09 21:53:18.928636
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = '001ed18e8a99'
+revision = 'dcf44004a9e6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,7 @@ def upgrade() -> None:
     sa.Column('is_suspended', sa.Boolean(), nullable=True),
     sa.Column('opted_out', sa.Boolean(), nullable=True),
     sa.Column('is_banned', sa.Boolean(), nullable=True),
+    sa.Column('is_it', sa.Boolean(), nullable=True),
     sa.Column('ref_id', sqlmodel.sql.sqltypes.GUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),

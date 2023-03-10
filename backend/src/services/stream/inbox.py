@@ -8,6 +8,7 @@ from asyncpraw.models import Subreddit as PrawSubReddit
 from src.clients.reddit.inbox import InboxClient
 from src.core.config import settings
 from src.core.const import TAG_TIME_HUMAN_READABLE, ReplyEnum
+from src.core.decorators import catch_apraw_and_log
 from src.core.enums import RestrictedReadMail, TagEnum
 from src.core.utils import is_tag_time_expired
 from src.interfaces.stream import IStream
@@ -25,6 +26,7 @@ class InboxStreamService(IStream[Message]):
         self.subreddit_name = subreddit_name
         self.client = client or InboxClient()
 
+    @catch_apraw_and_log
     async def pre_flight_check(self, tag_service: TagService, obj: Message) -> bool:
         author = obj.author
         await author.load()  # Re-fetches the object
@@ -122,9 +124,8 @@ class InboxStreamService(IStream[Message]):
 
             # a game is currently being played
             if game is not None:  # add check for game.modified_at
-
                 # is the tagger actually it?
-                if tagger.tag_time:
+                if tagger.is_it:
 
                     # player didn't tag anyone in allotted time, so end current game
                     if is_tag_time_expired(tagger.tag_time):
@@ -133,6 +134,7 @@ class InboxStreamService(IStream[Message]):
                         return None
 
                     # the 'it' person tagged another player
+                    await tag_service.player_untag(mention_author)
                     await tag_service.add_player_to_game(game.ref_id, tagee)
                     await parent.reply(
                         ReplyEnum.comment_reply_tag(tagger.username, TAG_TIME_HUMAN_READABLE)
@@ -146,7 +148,9 @@ class InboxStreamService(IStream[Message]):
                     await obj.reply(ReplyEnum.game_over())
                     return None
 
-                logger.info(f"Current active Game[{game_id}] Player(s)[{game.players}].")
+                logger.info(
+                    f"Current active Game[{game.ref_id}] Player(s)[{','.join([p.username for p in game.players])}]."
+                )
 
                 await obj.reply(ReplyEnum.active_game())
                 return game_id

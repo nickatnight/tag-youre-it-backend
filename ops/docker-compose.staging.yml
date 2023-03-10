@@ -17,7 +17,7 @@ x-fastapi-envs: &fastapi_envs
     - DEVELOPER=nickatnight
     - USERNAME=TagYoureItBot
     - PASSWORD=${PASSWORD}
-    - USE_SENTRY=True
+    - USE_SENTRY=False
 
 x-default_deploy: &default_deploy
   deploy:

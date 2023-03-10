@@ -6,7 +6,6 @@ on:
       - '*'
     branches:
       - main
-      - develop
 
 env:
   DOCTL_VERSION: 1.92.0
@@ -42,21 +41,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy staging
+      # - name: Deploy staging
+      #   uses: ironhalik/docker-over-ssh-action@v6
+      #   if: github.ref == 'refs/heads/develop'
+      #   env:
+      #     COMPOSE_FILE: ops/docker-compose.staging.yml
+      #     STACK_NAME: tagyoureitbackend-staging
+      #     DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      #     REGISTRY: ${{ secrets.REGISTRY }}
+      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     POSTGRES_STAGING_HOST: ${{ secrets.POSTGRES_STAGING_HOST }}
+      #     PASSWORD: ${{ secrets.PASSWORD }}
+      #     CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      #   with:
+      #     user: ubuntu
+      #     host: ${{ secrets.STAGING_HOST_IP }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+      #       tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
+      #       mv ./doctl /usr/local/bin
+      #       doctl registry login
+      #       docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
+
+      - name: Deploy prod
         uses: ironhalik/docker-over-ssh-action@v6
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         env:
-          COMPOSE_FILE: ops/docker-compose.staging.yml
-          STACK_NAME: tagyoureitbackend-staging
+          COMPOSE_FILE: ops/docker-compose.prod.yml
+          STACK_NAME: tagyoureitbackend-prod
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           REGISTRY: ${{ secrets.REGISTRY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_STAGING_HOST: ${{ secrets.POSTGRES_STAGING_HOST }}
+          POSTGRES_PROD_HOST: ${{ secrets.POSTGRES_PROD_HOST }}
           PASSWORD: ${{ secrets.PASSWORD }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         with:
           user: ubuntu
-          host: ${{ secrets.STAGING_HOST_IP }}
+          host: ${{ secrets.PROD_HOST_IP }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
@@ -64,25 +86,3 @@ jobs:
             mv ./doctl /usr/local/bin
             doctl registry login
             docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
-
-  #     - name: Deploy prod
-  #       uses: ironhalik/docker-over-ssh-action@v6
-  #       if: github.ref == 'refs/heads/main'
-  #       env:
-  #         COMPOSE_FILE: ops/docker-compose.prod.yml
-  #         STACK_NAME: tagyoureitbackend-prod
-  #         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-  #         REGISTRY: ${{ secrets.REGISTRY }}
-  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-  #         PASSWORD: ${{ secrets.PASSWORD }}
-  #         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #       with:
-  #         user: ubuntu
-  #         host: ${{ secrets.PROD_HOST_IP }}
-  #         key: ${{ secrets.SSH_KEY }}
-  #         script: |
-  #           wget https://github.com/digitalocean/doctl/releases/download/v${{ env.DOCTL_VERSION }}/doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
-  #           tar xf ./doctl-${{ env.DOCTL_VERSION }}-linux-amd64.tar.gz
-  #           mv ./doctl /usr/local/bin
-  #           doctl registry login
-  #           docker stack deploy --compose-file ${COMPOSE_FILE} --with-registry-auth --prune ${STACK_NAME}
