@@ -1,16 +1,21 @@
 import inspect
 import logging
 from datetime import datetime, timezone
+from typing import Optional
 
 from pydantic import BaseModel as DanticBaseModel
 
 from src.core.const import TAG_TIME
+from src.core.exceptions import TagTimeNullError
 
 
 logger = logging.getLogger(__name__)
 
 
-def is_tag_time_expired(tag_time: datetime) -> bool:
+def is_tag_time_expired(tag_time: Optional[datetime] = None) -> bool:
+    if not tag_time:
+        raise TagTimeNullError()
+
     tag_over_time: int = int((datetime.now(timezone.utc) - tag_time).total_seconds())
 
     return tag_over_time > TAG_TIME

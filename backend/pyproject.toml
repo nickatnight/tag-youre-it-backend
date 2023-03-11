@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tag-youre-it-backend"
-version = "0.1.0"
+version = "0.1.1"
 description = "Backend for TagYoureIt Reddit bot"
 authors = ["nickatnight <nickkelly.858@gmail.com>"]
 
@@ -29,9 +29,10 @@ pytest = "^7.2.1"
 pytest-cov = "^4.0.0"
 pytest-mock = "^3.10.0"
 pytest-asyncio = "^0.19.0"
-mypy = "^0.982"
+mypy = "^1.1.1"
 ruff = "^0.0.241"
 httpx = "^0.23.3"
+Faker = "^17.6.0"
 
 [tool.isort]
 multi_line_output = 3

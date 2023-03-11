@@ -30,5 +30,5 @@ async def players(
     repo = PlayerRepository(db=session)
     players = await repo.all(skip=skip, limit=limit, sort_field=sort, sort_order=order.lower())
 
-    response.headers["x-content-range"] = f"{len(players)}/{10}"
+    response.headers["x-content-range"] = f"{len(players)}/{limit}"
     return IGetResponseBase[List[IPlayerRead]](data=players)

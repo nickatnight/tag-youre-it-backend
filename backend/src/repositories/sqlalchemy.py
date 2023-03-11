@@ -46,7 +46,7 @@ class BaseSQLAlchemyRepository(IRepository, Generic[ModelType, CreateSchemaType,
         return db_obj
 
     async def get(self, **kwargs: Any) -> Optional[ModelType]:
-        logger.info(f"Fetching [{self._model.__table__.name.capitalize()}] object by [{kwargs}]")
+        logger.info(f"Fetching [{self._model.__table__.name.capitalize()}] object by [{kwargs}]")  # type: ignore
 
         query = select(self._model).filter_by(**kwargs)
         response = await self.db.execute(query)
@@ -58,7 +58,7 @@ class BaseSQLAlchemyRepository(IRepository, Generic[ModelType, CreateSchemaType,
         return scalar
 
     async def update(self, obj_current: ModelType, obj_in: UpdateSchemaType) -> ModelType:
-        logger.info(f"Updating [{self._model.__table__.name.capitalize()}] object with [{obj_in}]")
+        logger.info(f"Updating [{self._model.__table__.name.capitalize()}] object with [{obj_in}]")  # type: ignore
 
         update_data = obj_in.dict(
             exclude_unset=True
@@ -101,7 +101,7 @@ class BaseSQLAlchemyRepository(IRepository, Generic[ModelType, CreateSchemaType,
         return response.scalars().all()
 
     async def f(self, **kwargs: Any) -> List[ModelType]:
-        logger.info(f"Filtering [{self._model.__table__.name.capitalize()}] object by [{kwargs}]")
+        logger.info(f"Filtering [{self._model.__table__.name.capitalize()}] object by [{kwargs}]")  # type: ignore
 
         query = select(self._model).filter_by(**kwargs)
         response = await self.db.execute(query)

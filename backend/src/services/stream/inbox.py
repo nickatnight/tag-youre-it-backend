@@ -143,7 +143,7 @@ class InboxStreamService(IStream[Message]):
                     return game_id
 
                 it_player: Player = tag_service.it_player(game)
-                if is_tag_time_expired(it_player.tag_time):  # type: ignore
+                if is_tag_time_expired(it_player.tag_time):
                     await tag_service.reset_game(game.ref_id, it_player)
                     await obj.reply(ReplyEnum.game_over())
                     return None

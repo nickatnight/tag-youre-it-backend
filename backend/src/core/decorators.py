@@ -1,6 +1,6 @@
 import functools
 import logging
-from typing import Any
+from typing import Any, Callable
 
 import asyncprawcore
 
@@ -8,9 +8,10 @@ import asyncprawcore
 logger = logging.getLogger(__name__)
 
 
-def catch_apraw_and_log(func):
+# TODO: revisit this
+def catch_apraw_and_log(func: Callable[..., Any]) -> Any:
     @functools.wraps(func)
-    async def wrapper_catch_apraw_and_log(*args, **kwargs):
+    async def wrapper_catch_apraw_and_log(*args: str, **kwargs: int) -> Any:
         try:
             result: Any = await func(*args, **kwargs)
         except asyncprawcore.exceptions.RequestException as a_exc:

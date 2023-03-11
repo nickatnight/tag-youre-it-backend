@@ -4,3 +4,7 @@ class TagYoureItBackendException(Exception):
 
 class ObjectNotFound(TagYoureItBackendException):
     pass
+
+
+class TagTimeNullError(TagYoureItBackendException):
+    pass

@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     DB_POOL_SIZE: int = Field(default=83, env="DB_POOL_SIZE")
     WEB_CONCURRENCY: int = Field(default=9, env="WEB_CONCURRENCY")
     MAX_OVERFLOW: int = Field(default=64, env="MAX_OVERFLOW")
-    POOL_SIZE: Optional[int]
-    POSTGRES_URL: Optional[str]
+    POOL_SIZE: int = Field(default=None, env="POOL_SIZE")
+    POSTGRES_URL: str = Field(default=None, env="POSTGRES_URL")
 
     CLIENT_ID: str = Field(default="", env="CLIENT_ID")
     CLIENT_SECRET: str = Field(default="", env="CLIENT_SECRET")
