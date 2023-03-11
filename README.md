@@ -6,7 +6,10 @@
         <img alt="Coverage" src="https://codecov.io/gh/nickatnight/tag-youre-it-backend/branch/main/graph/badge.svg?token=E03I4QK6D9"/>
     </a>
     <a href="https://github.com/nickatnight/tag-youre-it-backend/releases"><img alt="Release Status" src="https://img.shields.io/github/v/release/nickatnight/tag-youre-it-backend"></a>
-    <a href="https://github.com/nickatnight/tag-youre-it-backend/releases"><img alt="Python Badge" src="https://img.shields.io/badge/python-3.8%7C3.9%7C3.10%7C3.11-blue"></a>
+    <a href="https://api.tagyoureitbot.com/docs"><img alt="Docs Badge" src="https://img.shields.io/badge/openapi-docs-blue"></a>
+    <a href="https://tagyoureitbot.com"><img alt="Site Badge" src="https://img.shields.io/badge/site-React-important"></a>
+    <a href="https://github.com/psf/black"><img alt="Style Badge" src="https://img.shields.io/badge/code%20style-black-000000"></a>
+    <a href="https://mypy.readthedocs.io/en/stable/"><img alt="MyPy Badge" src="https://img.shields.io/badge/mypy-1.1.1-FFDD23">
     <a href="https://github.com/nickatnight/tag-youre-it-backend/blob/main/LICENSE">
         <img alt="License Shield" src="https://img.shields.io/github/license/nickatnight/tag-youre-it-backend">
     </a>
@@ -19,10 +22,6 @@
 </p>
 
 FastAPI backend for Reddit's TagYoureItBot
-
-Frontend - https://tagyoureitbot.com
-
-API - https://api.tagyoureitbot.com/docs
 
 Project was scaffolded with [cookiecutter-fastapi-backend](https://github.com/nickatnight/cookiecutter-fastapi-backend)
 
@@ -68,15 +67,9 @@ See [r/TagYoureItBot](https://www.reddit.com/r/TagYoureItBot) for more updates.
 3. Backend, JSON based web API based on OpenAPI: `http://localhost/v1/`
 4. Automatic interactive documentation with Swagger UI (from the OpenAPI backend): `http://localhost/docs`
 
-The entrypoint to the bot can be found in `src.core.bot`. In short, for each sub which the bot is enabled, an async process will be pushed onto the event loop (each sub gets their own game engine).
+The entrypoint to the bot can be found in [src.core.bot](/backend/src/core/bot.py). In short, for each sub which the bot is enabled, an async process will be pushed onto the event loop (each sub gets their own game engine).
 
 ### Migrations
-
-After adding some models in `src/models/`, you can run the initial making of the migrations
-```console
-$ make alembic-init
-$ make alembic-migrate
-```
 Every migration after that, you can create new migrations and apply them with
 ```console
 $ make alembic-make-migrations "cool comment dude"

@@ -30,5 +30,5 @@ async def subreddits(
     repo = SubRedditRepository(db=session)
     subreddits = await repo.all(skip=skip, limit=limit, sort_field=sort, sort_order=order.lower())
 
-    response.headers["x-content-range"] = f"{len(subreddits)}/{10}"
+    response.headers["x-content-range"] = f"{len(subreddits)}/{limit}"
     return IGetResponseBase[List[ISubRedditRead]](data=subreddits)

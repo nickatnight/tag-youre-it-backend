@@ -4,6 +4,7 @@ from typing import Generator
 import pytest
 import pytest_asyncio
 from asyncpraw import Reddit
+from faker import Faker
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -18,15 +19,16 @@ from src.repositories.game import GameRepository
 from src.repositories.player import PlayerRepository
 from src.repositories.sqlalchemy import BaseSQLAlchemyRepository
 from src.repositories.subreddit import SubRedditRepository
+from src.services.base import BaseService
+from src.services.game import GameService
+from src.services.player import PlayerService
+from src.services.subreddit import SubRedditService
+from src.services.tag import TagService
 from tests.unit import test_redditor_one, test_subreddit
 from tests.utils import test_engine
 
 
-FAKE_SETTINGS = {
-    "client_id": "dummy",
-    "client_secret": "dummy",
-    "user_agent": "dummy",
-}
+fake = Faker()
 
 
 @pytest.fixture(scope="module")
@@ -79,6 +81,28 @@ def player_repo(async_session: AsyncSession) -> BaseSQLAlchemyRepository:
     return PlayerRepository(db=async_session)
 
 
+@pytest.fixture
+def mock_game_service(game_repo: BaseSQLAlchemyRepository) -> BaseService:
+    return GameService(repo=game_repo)
+
+
+@pytest.fixture
+def mock_sub_service(sub_repo: BaseSQLAlchemyRepository) -> BaseService:
+    return SubRedditService(repo=sub_repo)
+
+
+@pytest.fixture
+def mock_player_service(player_repo: BaseSQLAlchemyRepository) -> BaseService:
+    return PlayerService(repo=player_repo)
+
+
+@pytest.fixture
+def mock_tag_service(
+    mock_player_service: BaseService, mock_game_service: BaseService, mock_sub_service: BaseService
+) -> TagService:
+    return TagService(mock_player_service, mock_game_service, mock_sub_service)
+
+
 # TODO: add base fields here?
 @pytest.fixture
 def player() -> Player:
@@ -95,9 +119,23 @@ def player() -> Player:
 
 
 @pytest.fixture
-def it_player(player: Player) -> Player:
+def fake_player() -> Player:
     return Player(
-        username="testname",
+        username=fake.first_name().lower(),
+        reddit_id=fake.word(),
+        icon_img=fake.image_url(),
+        is_employee=fake.boolean(),
+        created_utc=fake.unix_time(),
+        verified=fake.boolean(),
+        is_suspended=False,
+        has_verified_email=fake.boolean(),
+    )
+
+
+@pytest.fixture
+def it_player() -> Player:
+    return Player(
+        username="iamitplayer",
         reddit_id="testid",
         icon_img=test_redditor_one["icon_img"],
         is_employee=test_redditor_one["is_employee"],
@@ -105,6 +143,7 @@ def it_player(player: Player) -> Player:
         verified=False,
         is_suspended=False,
         has_verified_email=True,
+        is_it=True,
     )
 
 
