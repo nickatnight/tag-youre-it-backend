@@ -15,6 +15,7 @@
     </a>
 </p>
 
+🚨 Archiving this project in favor of a new port on Reddits [Devvit](https://developers.reddit.com/docs/) platform. See project [here](https://github.com/nickatnight/tag-youre-devvit). 🚨
 
 # tag-youre-it-backend :runner:
 <p align="center">
